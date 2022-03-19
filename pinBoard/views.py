@@ -1,7 +1,7 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 
-from pinBoard.forms import UserForm
+from pinBoard.forms import UserForm, UserLogInForm
 
 
 def home(request):
@@ -23,11 +23,20 @@ def sign_up(request):
 
 
 def sign_in(request):
-    pass
+    if request.method == "POST":
+        user_log = authenticate(username=request.POST.get("username"), password=request.POST.get("password"))
+        if user_log is not None:
+            login(request, user_log)
+            return redirect("pinBoard:dashboard")
+
+    else:
+        form = UserLogInForm()
+    return render(request, "pinBoard/log_in.html", {"form": form})
 
 
 def log_out(request):
-    pass
+    logout(request)
+    return redirect("pinBoard:home")
 
 
 def dashboard(request):
