@@ -54,7 +54,7 @@ class ShopItem(models.Model):
     family = models.ForeignKey(Family, on_delete=models.CASCADE, null=True, related_name="shop_items")
 
     def __str__(self):
-        return str(self.id) + self.name
+        return self.name
 
 
 class Sentence(models.Model):
@@ -67,7 +67,7 @@ class Sentence(models.Model):
 
 class Note(models.Model):
     content = models.TextField(verbose_name="Treść notatki")
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, related_name="notes")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, related_name="notes")
 
     def __str__(self):
         return self.content
