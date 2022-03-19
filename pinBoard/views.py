@@ -1,7 +1,7 @@
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 
-from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm
+from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm
 
 
 def home(request):
@@ -59,8 +59,20 @@ def add_shop_item(request):
     return render(request, "pinBoard/shop_list_form.html", {'form': form})
 
 
-def task_form(request):
-    pass
+def add_task(request):
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
+            return redirect("pinBoard:dashboard")
+
+    else:
+        form = TaskForm()
+
+    return render(request, "pinBoard/user_task_form.html", {'form': form})
 
 
 def archive(request):

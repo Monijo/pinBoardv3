@@ -12,7 +12,7 @@ urlpatterns = [
 
     path('users/', views.dashboard, name='dashboard'),
     path('users/shop_list_form', views.add_shop_item, name='shop_list_form'),
-    path('users/task-form', views.task_form, name='task_form'),
+    path('users/task-form', views.add_task, name='task_form'),
     path('users/archive', views.archive, name='archive'),
     path('users/sensors', views.sensors, name='sensors'),
 

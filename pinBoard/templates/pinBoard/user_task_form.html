@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+
+{% block styles %}
+    {{ block.super }}
+ <link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <form action="" method="POST">
+
+    {% csrf_token %}
+    {{ form | crispy }}
+
+    <button type="submit" class="btn btn-success">Zapisz</button>
+     <a type="button" class="btn btn-primary" href="{% url 'pinBoard:dashboard' %}">Powrót</a>
+
+    </form>
+
+
+
+
+
+{% endblock %}
