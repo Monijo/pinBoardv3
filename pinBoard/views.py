@@ -1,11 +1,25 @@
-from django.shortcuts import render
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
+
+from pinBoard.forms import UserForm
 
 
 def home(request):
     return render(request, 'pinBoard/landing_page.html')
 
+
 def sign_up(request):
-    pass
+    if request.method == "POST":
+        form = UserForm(request.POST)
+
+        if form.is_valid():
+            user_log = form.save()
+            login(request, user_log)
+            return redirect('pinBoard:sign_in')
+
+    else:
+        form = UserForm()
+    return render(request, 'pinBoard/sign_up.html', {'form': form})
 
 
 def sign_in(request):
