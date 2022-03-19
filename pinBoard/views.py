@@ -17,7 +17,7 @@ def log_out(request):
 
 
 def dashboard(request):
-    pass
+    return render(request, 'pinBoard/dashboard.html')
 
 
 def shop_list_form(request):

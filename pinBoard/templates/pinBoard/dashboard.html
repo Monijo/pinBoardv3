@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+
+{% block content %}
+
+<style>
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+</style>
+
+    <div class="container-fluid" style="margin: 8px">
+  <a type="button" class="btn btn-primary" href="{% url 'pinBoard:dashboard' %}">Główna Tablica</a>
+  <button type="button" class="btn btn-primary">Archiwum</button>
+        {% for member in list_members %}
+  <a type="button" class="btn btn-primary" href="{% url 'pinBoard:member_view' member_id=member.id %}">{{ member.name }}</a>
+ {% endfor %}
+</div>
+
+
+    <div class="row">
+  <div class="column">
+
+        <div class="container px-7">
+  <div class="row gx-6">
+    <div class="col">
+     <div class="p-3 border bg-light"><div class="container-fluid">
+ <div class="card" style="width: 100%">
+  <div class="card-header bg-warning">
+    Do zrobienia:
+  </div>
+
+     <table style="width:100%;table-layout:fixed;padding: 5px">
+    <tr>
+        <td style="width:65%; padding: 5px">Tekst</td>
+        <td>select</td>
+        <td>button</td>
+    </tr>
+</table>
+
+</div>
+     </div>
+     </div>
+     </div>
+     </div>
+     </div>
+     </div>
+
+
+<div class="column">
+      <div class="p-3 border bg-light"><div class="container-fluid">
+
+
+
+          <div class="card" style="width: 100%;">
+  <div class="card-body sentence">
+    <h5 class="card-title"> Cytat na dzisiaj: </h5>
+
+    <p class="card-text">{{ random_sentence.content}}</p>
+
+  </div>
+</div>
+
+      <div style="margin: 40px"></div>
+          <div class="card shopItems" style="width: 100%;">
+  <div class="card-header">
+    Lista zakupów:
+  </div>
+  <ul class="list-group list-group-flush">
+      {% for item in items_to_buy %}
+    <li class="list-group-item">{{ item.name }}, Ilość: {{ item.quantity }}</li>
+        {% endfor %}
+
+  <a type="button" class="btn btn-success" href="{% url 'pinBoard:shop_list_form' %}">Dodaj element do listy zakupów</a>
+  </ul>
+</div>
+
+
+
+
+
+
+</div>
+</div>
+    </div>
+  </div>
+
+
+
+{% endblock %}
