@@ -11,7 +11,7 @@ urlpatterns = [
     path('logout', views.log_out, name='log_out'),
 
     path('users/', views.dashboard, name='dashboard'),
-    path('users/shop_list_form', views.shop_list_form, name='shop_list_form'),
+    path('users/shop_list_form', views.add_shop_item, name='shop_list_form'),
     path('users/task-form', views.task_form, name='task_form'),
     path('users/archive', views.archive, name='archive'),
     path('users/sensors', views.sensors, name='sensors'),
