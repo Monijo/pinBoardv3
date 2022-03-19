@@ -2,8 +2,7 @@ from django.shortcuts import render
 
 
 def home(request):
-    pass
-
+    return render(request, 'pinBoard/landing_page.html')
 
 def sign_up(request):
     pass

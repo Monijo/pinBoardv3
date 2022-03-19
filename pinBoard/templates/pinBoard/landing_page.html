@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div class="container">
+<div class="card mb-3">
+  <img src="static/images/tablica.jpg" class="card-img-" style="height: 580px" alt="...">
+  <div class="card-body">
+    <h5 class="card-title" style="color:green">pinBoard</h5>
+    <p class="card-text">Najlepsza aplikacja do zarządzania domowymi sprawami. Znajdziesz tu min.:
+            listę zakupów, miejsce na notatki, liste zadań indywidualną jak i przeznaczoną dla wszystkich członków rodziny!
+            Zarządzaj sprawami rodzinnymi już od dzisiaj lepiej i szybciej!</p>
+    <p class="card-text"><small class="text-muted">Last updated 50 minutes ago</small></p>
+  </div>
+</div>
+</div>
+
+    <div class="container">
+
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Zaloguj się</h5>
+        <p class="card-text">Jeśli jesteś naszym użytkownikiem zaloguj się.</p>
+        <a href="{% url "pinBoard:sign_in" %}" class="btn btn-success">Log in</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Download</h5>
+        <p class="card-text">Jeśli nie masz naszej aplikacjii pobierz ją tutaj na swoje urządzenie za darmo!</p>
+        <a href="#" class="btn btn-success">download</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+{% endblock %}
