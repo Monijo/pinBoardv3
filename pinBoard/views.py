@@ -1,10 +1,10 @@
 import random
-from multiprocessing.connection import families
 
 from django.contrib.auth import login, authenticate, logout
 from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 
 from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm, MeetingForm, FamilyForm, \
     InvitationForm
@@ -143,11 +143,22 @@ def invitation_form(request, f_id):
         form = InvitationForm(request.POST)
 
         if form.is_valid():
-            family = form.save(commit=False)
+            invitation = form.save(commit=False)
+            invitation.user=request.user
+            invitation.expired=False
+            invitation.save()
 
-            family.save()
-
-
+            invitation_link = f"/dashboard/invitation/{invitation.number}"
+            send_mail(
+                {invitation.target_user},
+                f'''Do you want to join our family? {invitation.family.name}
+                Click link: {invitation_link}
+                
+                ''',
+                {request.user.first_name},
+                [{invitation.email}],
+                fail_silently=False,
+            )
 
             return redirect("pinBoard:family_list")
 
