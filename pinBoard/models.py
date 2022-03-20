@@ -24,6 +24,9 @@ class FamilyUser(models.Model):
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
     is_owner = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = [['user', 'family']]
+
     def __str__(self):
         return self.user
 
@@ -43,6 +46,7 @@ class Task(models.Model):
     is_done = models.BooleanField(default=False)
     priority = models.BooleanField(default=False, verbose_name="Priorytet")
     family = models.ForeignKey(Family, on_delete=models.CASCADE, null=True, related_name="tasks")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="tasks")
 
     def __str__(self):
         return self.content

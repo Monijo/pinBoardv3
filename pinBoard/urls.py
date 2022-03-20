@@ -17,6 +17,7 @@ urlpatterns = [
     path('users/sensors', views.sensors, name='sensors'),
 
     path('users/<int:id>', views.user_view, name='user_view'),
+    path('users/<int:id>/task_form', views.user_add_task_self, name='user_add_task_self'),
     path('users/<int:id>/note_form', views.note_form, name='note_form'),
     path('users/<int:id>/all_notes', views.all_notes, name='all_notes'),
     path('users/<int:id>/meeting_form', views.meeting_form, name='meeting_form'),

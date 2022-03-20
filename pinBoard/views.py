@@ -19,7 +19,9 @@ def sign_up(request):
         form = UserForm(request.POST)
 
         if form.is_valid():
-            user_log = form.save()
+            user_log = form.save(commit=False)
+            user_log.families = request.families
+            user_log.save()
             login(request, user_log)
             return redirect('pinBoard:sign_in')
 
@@ -49,17 +51,13 @@ def dashboard(request):
     if request.method == "GET":
         sentences = Sentence.objects.all()
         random_sentence = random.choice(sentences)
-        # familyFormset = inlineformset_factory(User, Family)
-        # formset = familyFormset(isinstance=families)
+        families = request.user.families.all()
+        tasks_list = []
+        for family in families:
+            for task in family.tasks:
+                tasks_list.append(task)
 
-        # tasks = farequest.user.families.family.tasks
-        # items_to_buy = ShopItem.objects.filter(family=request.user)
-
-        context = {'random_sentence': random_sentence,
-                   # "formset": formset,
-                   #  "instance": families,
-
-                   }
+        context = {'random_sentence': random_sentence, 'tasks_list': tasks_list}
 
         return render(request, 'pinBoard/dashboard.html', context)
     else:
@@ -103,7 +101,7 @@ def add_task(request):
 
         if form.is_valid():
             task = form.save(commit=False)
-            task.user = request.user
+            task.family = request.user
             task.save()
             return redirect("pinBoard:dashboard")
 
@@ -138,7 +136,20 @@ def user_view(request, id):
 
             return redirect('pinBoard:user_view', id=id)
 
+def user_add_task_self(request, id):
+    if request.method == "POST":
+        form = TaskForm(request.POST)
 
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
+            return redirect("pinBoard:user_view", id=id)
+
+    else:
+        form = TaskForm()
+
+    return render(request, "pinBoard/user_self_task_form.html", {'form': form})
 
 def note_form(request, id):
     if request.method == "GET":
@@ -150,7 +161,7 @@ def note_form(request, id):
 
         if form.is_valid():
             note = form.save(commit=False)
-            note.user = User.objects.get(id=id)
+            note.user = request.user
             note.save()
             return redirect("pinBoard:user_view", id=id)
 
@@ -184,7 +195,7 @@ def meeting_form(request, id):
         form = MeetingForm(request.POST)
         if form.is_valid():
             meeting = form.save(commit=False)
-            meeting.user = User.objects.get(id=id)
+            meeting.user = request.user
             meeting.save()
 
             return redirect("pinBoard:all_meetings", id=id)

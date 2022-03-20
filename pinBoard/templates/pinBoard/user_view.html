@@ -31,28 +31,70 @@
   </section>
          <div class="container-fluid">
 
- <div class="card" style="width: 18rem;">
+ <div class="card" style="width: 28rem;">
   <div class="card-header">
     Moje zadania:
   </div>
-  <ul class="list-group">
- {% for task in user.tasks %}
-  <li class="list-group-item">
-    <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
-      {{ task.content}}
 
-<div style="display: inline-block">
-<form action="" method="POST">
+
+     <table style="width:100%;table-layout:fixed;padding: 5px">
+     <form action="" method="POST">
+     {% csrf_token %}
+         {%  for task in user.tasks.all %}
+    <tr >
+
+        <td style="width:65%; padding: 5px; margin:3px"><div>
+            <input name="tasks" class="form-check-input me-1" type="hidden" value="{{ task.id }}" aria-label="...">
+            {{ task.content }}</div>
+        </td>
+        <td>
+
+            <form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name= "done" value="{{ task.id }}">
+    <input class="btn btn-success" type="submit" value="zrobione">
+</form>
+
+
+
+        </td>
+        <td>
+
+            <form action="" method="POST">
     {% csrf_token %}
     <input type="hidden" name= "delete" value="{{ task.id }}">
     <input class="btn btn-danger" type="submit" value="usuń">
 </form>
-</div>
 
-  </li>
-      {% endfor %}
+        </td>
+    </tr>
+             </form>
+         {% endfor %}
+</table>
+<a type="button" class="btn-success" href="{%  url "pinBoard:" %}">Dodaj zadanie</a>
 
-  </ul>
+
+
+
+
+{#  <ul class="list-group">#}
+{# {% for task in user.tasks.all %}#}
+{#  <li class="list-group-item">#}
+{#    <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">#}
+{#      {{ task.content}}#}
+{##}
+{#<div style="display: inline-block">#}
+{#<form action="" method="POST">#}
+{#    {% csrf_token %}#}
+{#    <input type="hidden" name= "delete" value="{{ task.id }}">#}
+{#    <input class="btn btn-danger" type="submit" value="usuń">#}
+{#</form>#}
+{#</div>#}
+{##}
+{#  </li>#}
+{#      {% endfor %}#}
+{##}
+{#  </ul>#}
 </div>
 </div>
 </div>
@@ -150,7 +192,7 @@
   </thead>
   <tbody>
 
-  {% for meeting in member_meetings %}
+  {% for meeting in user_meetings %}
     <tr>
       <th scope="row">{{ meeting.date }}</th>
       <td>{{ meeting.hour }}</td>
