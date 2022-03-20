@@ -6,7 +6,7 @@ from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm, MeetingForm
+from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm, MeetingForm, FamilyForm
 from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note, Meeting
 
 
@@ -18,9 +18,11 @@ def sign_up(request):
     if request.method == "POST":
         form = UserForm(request.POST)
 
+
         if form.is_valid():
             user_log = form.save(commit=False)
-            user_log.families = request.families
+
+            user_log.families.add(request.families)
             user_log.save()
             login(request, user_log)
             return redirect('pinBoard:sign_in')
@@ -35,7 +37,7 @@ def sign_in(request):
         user_log = authenticate(username=request.POST.get("username"), password=request.POST.get("password"))
         if user_log is not None:
             login(request, user_log)
-            return redirect("pinBoard:dashboard")
+            return redirect(f"users/{request.user.id}")
 
     else:
         form = UserLogInForm()
@@ -47,17 +49,43 @@ def log_out(request):
     return redirect("pinBoard:home")
 
 
+def family_list(request):
+    if request.method =="GET":
+        families = request.user.families.all()
+        return render(request, "pinBoard/family_list.html", {"families":families})
+    else:
+        family_id = request.POST.get("family_id")
+
+def create_family(request):
+    if request.method == "POST":
+        form = FamilyForm(request.POST)
+
+        if form.is_valid():
+            family = form.save(commit=False)
+
+            family.save()
+            family.user_set.add(request.user)
+            family.save()
+
+
+            return redirect("pinBoard:dashboard")
+
+    else:
+        form = FamilyForm()
+    return render(request, "pinBoard/createFamily.html", {"form": form})
+
+
 def dashboard(request):
     if request.method == "GET":
         sentences = Sentence.objects.all()
         random_sentence = random.choice(sentences)
         families = request.user.families.all()
         tasks_list = []
-        for family in families:
-            for task in family.tasks:
-                tasks_list.append(task)
-
-        context = {'random_sentence': random_sentence, 'tasks_list': tasks_list}
+        # for family in families:
+        #     for task in family.tasks.all():
+        #         tasks_list.append(task)
+        print("*"*40, tasks_list)
+        context = {'random_sentence': random_sentence}
 
         return render(request, 'pinBoard/dashboard.html', context)
     else:

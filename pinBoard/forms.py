@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.forms import TextInput, NumberInput, PasswordInput, Textarea, DateTimeInput, TimeInput
 
-from pinBoard.models import ShopItem, Task, Note, Meeting
+from pinBoard.models import ShopItem, Task, Note, Meeting, Family
 
 
 class ShopItemForm(forms.ModelForm):
@@ -31,8 +31,8 @@ class TaskForm(forms.ModelForm):
 
 class UserForm(forms.ModelForm):
     class Meta:
-        model = get_user_model()
-        fields = ('username', 'password', 'email', 'families')
+        model = get_user_model()#?
+        fields = ('username', 'password', 'email')
 
         error_messages = {
             'username': {
@@ -41,19 +41,21 @@ class UserForm(forms.ModelForm):
         }
 
         widgets = {
+
             'username': TextInput(attrs={'placeholder': 'Nazwa użytkownika'}),
             'password': PasswordInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'twoje hasło'
             }),
             'email': TextInput(attrs={'placeholder': "Adres e-mail"}),
-            'families': TextInput(attrs={'placeholder': "Your family"}),
+
         }
 
     def save(self, commit=True, *args):
         user = super().save(commit=False)
         user.password = make_password(self.cleaned_data.get('password'))
         user.username = self.cleaned_data.get('username')
+        user.families = self.cleaned_data.get('families')
 
         if commit:
             user.save()
@@ -66,6 +68,7 @@ class UserLogInForm(forms.ModelForm):
         fields = ('username', 'password')
 
         widgets = {
+
             'username': TextInput(attrs={'placeholder': 'Nazwa użytkownika'}),
             'password': PasswordInput(attrs={
                 'class': 'form-control',
@@ -93,4 +96,13 @@ class MeetingForm(forms.ModelForm):
         widgets = {
             "date": DateTimeInput(attrs={'placeholder': "rrrr-mm-dd"}),
             "hour": TimeInput(attrs={'placeholder': 'hh:mm:ss'})
+        }
+
+class FamilyForm(forms.ModelForm):
+    class Meta:
+        model = Family
+        fields = ("name",)
+
+        widgets = {
+            "name": TextInput(attrs={'placeholder': "Podaj nazwę rodziny"})
         }

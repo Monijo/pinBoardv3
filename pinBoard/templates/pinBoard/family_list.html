@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%  block styles %}
+ {{ block.super }}
+    <link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}">
+
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+<div>
+<ul>
+<form action="" method="POST">
+{%  csrf_token %}
+    {% for family in families %}
+       <li style="margin-top: 30px"> <input type="hidden" value="{{ family.id }}">
+        <span>{{ family.name }}</span>
+             <input name="family_id" class="form-check-input me-1" type="hidden" value="{{ family.id }}" >
+
+        <button style="margin-left: 40px" type="submit" class="btn btn-success" href="{% url 'pinBoard:dashboard' %}">Przejdź do tej rodziny</button>
+</li>
+        {% empty %}
+        Nie należysz jescze do żadnej rodziny.
+    {% endfor %}
+</ul>
+ </div>
+<div>
+<div style="margin-top: 50px">
+
+    <a type="button" class="btn btn-primary" href="{% url 'pinBoard:create_family' %}">Dodaj rodzinę</a>
+</div>
+
+
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+
+            <input name="tasks" class="form-check-input me-1" type="hidden" value="{{ task.id }}" aria-label="...">
+            {{ task.content }}
