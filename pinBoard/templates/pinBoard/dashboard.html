@@ -22,11 +22,13 @@
 </style>
 
     <div class="container-fluid" style="margin: 8px">
-  <a type="button" class="btn btn-primary" href="{% url 'pinBoard:dashboard' %}">Główna Tablica</a>
-  <button type="button" class="btn btn-primary">Archiwum</button>
-        {% for member in list_members %}
-  <a type="button" class="btn btn-primary" href="{% url 'pinBoard:member_view' member_id=member.id %}">{{ member.name }}</a>
- {% endfor %}
+{#        <a type="button" class="btn btn-primary" href="{% url 'pinBoard:member_view' member_id=member.id %}">{{ member.name }}</a>#}
+          <a type="button" class="btn btn-primary" href="{% url 'pinBoard:dashboard' %}">Główna Tablica</a>
+          <button type="button" class="btn btn-primary">Archiwum</button>
+          <button type="button" class="btn btn-primary">Sensors</button>
+
+
+
 </div>
 
 
@@ -43,11 +45,32 @@
   </div>
 
      <table style="width:100%;table-layout:fixed;padding: 5px">
+     <form action="" method="POST">
+     {% csrf_token %}
+         {%  for task in tasks %}
     <tr>
-        <td style="width:65%; padding: 5px">Tekst</td>
-        <td>select</td>
-        <td>button</td>
+
+        <td style="width:65%; padding: 5px">
+            <input name="tasks" class="form-check-input me-1" type="hidden" value="{{ task.id }}" aria-label="...">
+            {{ task.content }}</td>
+        <td>
+
+            <select id="tasks_members" name="tasks_members">
+
+{% for member in list_members %}
+   <option value="{{member.id}}">
+     {{ member.name }}
+   </option>
+    </select>
+
+{% endfor %}
+
+
+        </td>
+        <td><input class="btn btn-success" type="submit" value="+"></td>
     </tr>
+             </form>
+         {% endfor %}
 </table>
 
 </div>

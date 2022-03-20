@@ -1,7 +1,13 @@
+import random
+from multiprocessing.connection import families
+
 from django.contrib.auth import login, authenticate, logout
+from django.forms import inlineformset_factory
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm
+from pinBoard.models import Sentence, Task, ShopItem, User, Family
 
 
 def home(request):
@@ -40,7 +46,39 @@ def log_out(request):
 
 
 def dashboard(request):
-    return render(request, 'pinBoard/dashboard.html')
+    if request.method == "GET":
+        sentences = Sentence.objects.all()
+        random_sentence = random.choice(sentences)
+        # familyFormset = inlineformset_factory(User, Family)
+        # formset = familyFormset(isinstance=families)
+
+        # tasks = farequest.user.families.family.tasks
+        # items_to_buy = ShopItem.objects.filter(family=request.user)
+
+        context = {'random_sentence': random_sentence,
+                   # "formset": formset,
+                   #  "instance": families,
+
+                   }
+
+        return render(request, 'pinBoard/dashboard.html', context)
+    else:
+
+        if request.POST.get("tasks_members"):
+            member_id = request.POST.get("tasks_members")
+            member = User.objects.get(id=member_id)
+            task_id = request.POST.get("tasks")
+
+            selected_task = Task.objects.get(id=task_id)
+            selected_task.member = member
+            selected_task.save()
+
+        id_task_to_delete = request.POST.get("delete")
+        if id_task_to_delete:
+            task_to_delete = Task.objects.get(id=id_task_to_delete)
+            task_to_delete.delete()
+
+        return redirect("pinBoard:dashboard")
 
 
 def add_shop_item(request):
@@ -76,15 +114,32 @@ def add_task(request):
 
 
 def archive(request):
-    pass
+    return HttpResponse("Działa!")
 
 
 def sensors(request):
     pass
 
+#user
+def user_view(request, id):
+    if request.method == "GET":
+        user = User.objects.get(id=id)
+        user_notes = list(user.notes.all().order_by("-id"))
+        user_meetings = user.meetinges.all().order_by("date")
+        return render(request, "pinBoard/user_view.html", {"user": user,
+                                                             "user_meetings": user_meetings,
+                                                             "user_notes": user_notes,
+                                                             })
+    else:
 
-def member_view(request):
-    pass
+        if request.POST.get("delete"):
+            id_task_to_delete = request.POST.get("delete")
+
+            task_to_delete = Task.objects.get(id=id_task_to_delete)
+            task_to_delete.delete()
+
+            return redirect('pinBoard:user_view', id=id)
+
 
 
 def note_form(request):

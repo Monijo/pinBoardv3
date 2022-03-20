@@ -16,7 +16,7 @@ urlpatterns = [
     path('users/archive', views.archive, name='archive'),
     path('users/sensors', views.sensors, name='sensors'),
 
-    path('users/<int:id>', views.member_view, name='member_view'),
+    path('users/<int:id>', views.user_view, name='user_view'),
     path('users/<int:id>/note_form', views.note_form, name='note_form'),
     path('users/<int:id>/all_notes', views.all_notes, name='all_notes'),
     path('users/<int:id>/meeting_form', views.meeting_form, name='meeting_form'),

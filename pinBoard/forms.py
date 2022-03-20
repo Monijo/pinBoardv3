@@ -32,7 +32,7 @@ class TaskForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
-        fields = ('username', 'password', 'email')
+        fields = ('username', 'password', 'email', 'families')
 
         error_messages = {
             'username': {
@@ -46,7 +46,8 @@ class UserForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'twoje hasło'
             }),
-            'email': TextInput(attrs={'placeholder': "Adres e-mail"})
+            'email': TextInput(attrs={'placeholder': "Adres e-mail"}),
+            'families': TextInput(attrs={'placeholder': "Your family"}),
         }
 
     def save(self, commit=True, *args):

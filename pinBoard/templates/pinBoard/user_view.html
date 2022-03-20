@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%  block styles %}
+ {{ block.super }}
+    <link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}">
+
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container-fluid" style="margin: 8px">
+  <a type="button" class="btn btn-primary" href="{% url 'pinBoard:dashboard' %}">Główna Tablica</a>
+  <button type="button" class="btn btn-primary">Archiwum</button>
+        {% for member in list_members %}
+  <a type="button" class="btn btn-primary" href="{% url 'pinBoard:member_view' member_id=member.id %}">{{ member.name }}</a>
+ {% endfor %}
+</div>
+
+    <div class="container px-4">
+  <div class="row gx-5">
+    <div class="col">
+
+     <div class="p-3 border bg-light">
+  <section style="display: flex; justify-content: space-around">
+         <img style="width:150px; height:150px" src="{% static "images/img.png" %}"/>
+      <p style="display: flex; align-items: center; color: darkolivegreen"><b>{{ member.name }}</b></p>
+  </section>
+         <div class="container-fluid">
+
+ <div class="card" style="width: 18rem;">
+  <div class="card-header">
+    Moje zadania:
+  </div>
+  <ul class="list-group">
+ {% for task in member.task_set.all %}
+  <li class="list-group-item">
+    <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
+      {{ task.content}}
+
+<div style="display: inline-block">
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name= "delete" value="{{ task.id }}">
+    <input class="btn btn-danger" type="submit" value="usuń">
+</form>
+</div>
+
+  </li>
+      {% endfor %}
+
+  </ul>
+</div>
+</div>
+</div>
+    </div>
+
+
+
+
+
+
+    <div class="col">
+      <div class="p-3 border bg-light"><div class="container-fluid">
+
+
+
+
+
+
+
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+         <div style="display: flex; align-items: center" id="title"><p>Moje notatki :)</p></div>
+  <div class="carousel-inner">
+
+    <div class="carousel-item active">
+
+
+        <div class="card">
+  <div class="card-body">
+      {% if member_notes.1.content %}
+      {{ member_notes.1.content}}
+          {% else %}
+          Miejsce na Twoją notatkę
+      {% endif %}
+
+  </div>
+</div>
+
+
+    </div>
+    <div class="carousel-item">
+               <div class="card">
+  <div class="card-body">
+      {% if member_notes.2.content %}
+      {{ member_notes.2.content}}
+      {% else %}
+      Dodaj naciskając guzik
+      {% endif %}
+  </div>
+</div>
+    </div>
+    <div class="carousel-item">
+                <div class="card">
+  <div class="card-body">
+      {% if member_notes.3.content %}
+      {{ member_notes.3.content}}
+      {% else %}
+      Przycisk jest na dole
+      {% endif %}
+  </div>
+</div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+
+
+
+
+</div>
+
+        <a class="btn btn-success" type="button" href="{% url 'pinBoard:note_form' id=user.id %}" >Dodaj</a>
+          <a class="btn btn-success" type="button"  href="{% url 'pinBoard:all_notes' id=user.id %}" >Wszystkie notatki</a>
+
+
+
+
+
+</div>
+
+          <section style="margin-top: 70px">
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Data</th>
+      <th scope="col">Godzina</th>
+      <th scope="col">Nazwa</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  {% for meeting in member_meetings %}
+    <tr>
+      <th scope="row">{{ meeting.date }}</th>
+      <td>{{ meeting.hour }}</td>
+      <td>{{ meeting.name }}</td>
+    </tr>
+
+  {% endfor %}
+
+  </tbody>
+
+</table>
+
+<a type="button" class="btn btn-success" href="{% url 'pinBoard:meeting_form' id=user.id %}">Dodaj</a>
+<a type="button" class="btn btn-primary" href="{% url 'pinBoard:all_meetings' id=user.id %}">Szczegóły</a>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+{% endblock %}
