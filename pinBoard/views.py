@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm
-from pinBoard.models import Sentence, Task, ShopItem, User, Family
+from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note
 
 
 def home(request):
@@ -157,8 +157,24 @@ def note_form(request, id):
             return redirect("pinBoard:user_view", id=id)
 
 
-def all_notes(request):
-    pass
+def all_notes(request, id):
+    if request.method == "GET":
+        user = User.objects.get(id=id)
+        all_notes_of_member = user.notes.all()
+
+        context = {
+            "all_notes": all_notes_of_member,
+            'user': user
+        }
+
+        return render(request, "pinBoard/all_notes.html", context)
+
+    else:
+        note_id = request.POST.get("delete_note")
+        note_to_delete = Note.objects.get(id=note_id)
+        note_to_delete.delete()
+
+        return redirect("pinBoard:all_notes", id=id)
 
 
 def meeting_form(request):

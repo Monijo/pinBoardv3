@@ -17,7 +17,7 @@
     <div class="container-fluid" style="margin: 8px">
   <a type="button" class="btn btn-primary" href="{% url 'pinBoard:dashboard' %}">Główna Tablica</a>
   <button type="button" class="btn btn-primary">Archiwum</button>
-        {% for member in list_members %}
+        {% for user in list_members %}
   <a type="button" class="btn btn-primary" href="{% url 'pinBoard:member_view' member_id=member.id %}">{{ member.name }}</a>
  {% endfor %}
 </div>
@@ -29,7 +29,7 @@
      <div class="p-3 border bg-light">
   <section style="display: flex; justify-content: space-around">
          <img style="width:150px; height:150px" src="{% static "images/img.png" %}"/>
-      <p style="display: flex; align-items: center; color: darkolivegreen"><b>{{ member.name }}</b></p>
+      <p style="display: flex; align-items: center; color: darkolivegreen"><b>{{ user.first_name }}</b></p>
   </section>
          <div class="container-fluid">
 
@@ -38,7 +38,7 @@
     Moje zadania:
   </div>
   <ul class="list-group">
- {% for task in member.task_set.all %}
+ {% for task in user.tasks.all %}
   <li class="list-group-item">
     <input class="form-check-input me-1" type="checkbox" value="" aria-label="...">
       {{ task.content}}
@@ -83,8 +83,8 @@
 
         <div class="card">
   <div class="card-body">
-      {% if member_notes.1.content %}
-      {{ member_notes.1.content}}
+      {% if user_notes.1.content %}
+      {{ user_notes.1.content}}
           {% else %}
           Miejsce na Twoją notatkę
       {% endif %}
@@ -97,8 +97,8 @@
     <div class="carousel-item">
                <div class="card">
   <div class="card-body">
-      {% if member_notes.2.content %}
-      {{ member_notes.2.content}}
+      {% if user_notes.2.content %}
+      {{ user_notes.2.content}}
       {% else %}
       Dodaj naciskając guzik
       {% endif %}
@@ -108,8 +108,8 @@
     <div class="carousel-item">
                 <div class="card">
   <div class="card-body">
-      {% if member_notes.3.content %}
-      {{ member_notes.3.content}}
+      {% if user_notes.3.content %}
+      {{ user_notes.3.content}}
       {% else %}
       Przycisk jest na dole
       {% endif %}
@@ -131,7 +131,7 @@
 
 </div>
 
-        <a class="btn btn-success" type="button" href="{% url 'pinBoard:note_form' id=user.id %}" >Dodaj</a>
+        <a class="btn btn-success" type="button" href="{% url 'pinBoard:note_form' id=user.id %}" >Dodaj notatkę</a>
           <a class="btn btn-success" type="button"  href="{% url 'pinBoard:all_notes' id=user.id %}" >Wszystkie notatki</a>
 
 

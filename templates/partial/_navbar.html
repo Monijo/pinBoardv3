@@ -28,7 +28,7 @@
   {% if user.is_authenticated %}
     <ul class="nav justify-content-end">
     <li class="nav-item">
-        <a class="nav-link disabled" href="#"><b>Witajcie </b></a>
+        <a class="nav-link disabled" href="#"><b>Witaj {{ request.user.first_name }} </b></a>
       </li>
 
 

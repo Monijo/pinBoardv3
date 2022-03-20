@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%  block styles %}
+ {{ block.super }}
+    <link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}">
+
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+
+<section>
+
+<ul class="list-group">
+<li><b style="color: #0c4128">Moje notatki:</b></li>
+<div style="display: inline-block">
+    {% for note in all_notes %}
+
+  <li  class="list-group-item list-group-item-success">{{ note.content }}
+    <form actopn="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="delete_note" value="{{ note.id }}">
+    <input type="submit" class="btn btn-danger" value="x">
+
+    </form>
+    {% endfor %}
+</li>
+</div>
+
+</ul>
+    <a type="button" class="btn btn-success" href="{% url 'pinBoard:note_form' id=user.id %}">Dodaj</a>
+    <a type="button" class="btn btn-primary" href="{% url 'pinBoard:user_view' id=user.id %}">Powrót</a>
+
+
+</section>
+
+{% endblock %}
