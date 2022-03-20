@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.forms import TextInput, NumberInput, PasswordInput, Textarea, DateTimeInput, TimeInput
 
-from pinBoard.models import ShopItem, Task, Note, Meeting, Family
+from pinBoard.models import ShopItem, Task, Note, Meeting, Family, Invitation
 
 
 class ShopItemForm(forms.ModelForm):
@@ -106,3 +106,16 @@ class FamilyForm(forms.ModelForm):
         widgets = {
             "name": TextInput(attrs={'placeholder': "Podaj nazwę rodziny"})
         }
+
+
+class InvitationForm(forms.ModelForm):
+    class Meta:
+        model = Invitation
+        fields = ("target_user", "email", "family")
+
+        widgets = {
+            "target_user": TextInput(attrs={'placeholder': "Podaj nazwę osoby którą chcesz zaprosić"}),
+            'email': TextInput(attrs={'placeholder': "Adres e-mail osoby którą chcesz zaprosić"}),
+            "family": TextInput(attrs={'placeholder': 'nazwa rodziny'})
+        }
+

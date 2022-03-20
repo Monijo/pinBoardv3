@@ -15,8 +15,13 @@
 {% block content %}
 
 <section>
+<h3>Zarchwizowane zadania: </h3>
+    <ul>
+        {% for arch_task in archive_tasks.all %}
+            <li>{{ arch_task.content }}</li>
 
-Archiwlane taski
+        {% endfor %}
+    </ul>
 
 
 <a type="button" class="btn btn-primary" href="{% url 'pinBoard:user_view' id=user.id %}">Powrót</a>

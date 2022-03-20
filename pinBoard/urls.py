@@ -14,6 +14,7 @@ urlpatterns = [
     path('create_familie', views.create_family, name="create_family"),
 
     path('dashboard/<int:f_id>', views.dashboard, name='dashboard'),
+    path('dashboard/<int:f_id>/invitation_form', views.invitation_form, name='invitation_form'),
     path('dashboard/<int:f_id>/shop_list_form', views.add_shop_item, name='shop_list_form'),
     path('dashboard/<int:f_id>/task-form', views.add_task, name='task_form'),
 

@@ -22,11 +22,14 @@
 </style>
 
     <div class="container-fluid" style="margin: 8px">
-{#        <a type="button" class="btn btn-primary" href="{% url 'pinBoard:member_view' member_id=member.id %}">{{ member.name }}</a>#}
+
           <a type="button" class="btn btn-primary" href="{% url 'pinBoard:family_list' %}">Rodziny</a>
+         <a type="button" href="{% url 'pinBoard:user_view' id=request.user.id %}" class="btn btn-primary">Widok użytkownika</a>
+         <a type="button" href="{% url 'pinBoard:invitation_form' f_id=family.id%}" class="btn btn-primary">Zaproś członka rodziny</a>
           <a  type="button" class="btn btn-primary" href="{% url 'pinBoard:archive' id=request.user.id %}">Archiwum</a>
+
+
           <button type="button" class="btn btn-primary">Sensors</button>
-          <a type="button" href="{% url 'pinBoard:user_view' id=request.user.id %}" class="btn btn-primary">Widok użytkownika</a>
 
 
 

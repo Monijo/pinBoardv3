@@ -16,7 +16,7 @@
 
     <div class="container-fluid" style="margin: 8px">
   <a type="button" class="btn btn-primary" href="{% url 'pinBoard:family_list' %}">Moje rodziny</a>
-  <button type="button" class="btn btn-primary">Archiwum</button>
+  <a  type="button" class="btn btn-primary" href="{% url 'pinBoard:archive' id=request.user.id %}">Archiwum</a>
 
 </div>
 

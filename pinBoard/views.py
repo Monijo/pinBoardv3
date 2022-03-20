@@ -6,8 +6,9 @@ from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm, MeetingForm, FamilyForm
-from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note, Meeting
+from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm, MeetingForm, FamilyForm, \
+    InvitationForm
+from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note, Meeting, ArchiweTasks
 
 
 def home(request):
@@ -137,9 +138,26 @@ def add_task(request, f_id):
         family = Family.objects.get(id=f_id)
     return render(request, "pinBoard/user_task_form.html", {'form': form, 'family': family})
 
+def invitation_form(request, f_id):
+    if request.method == "POST":
+        form = InvitationForm(request.POST)
+
+        if form.is_valid():
+            family = form.save(commit=False)
+
+            family.save()
+
+
+
+            return redirect("pinBoard:family_list")
+
+    else:
+        form = InvitationForm()
+    return render(request, "pinBoard/invitation_form.html", {"form": form})
 
 def archive(request, id):
-    return render(request, "pinBoard/archive.html")
+    archived_tasks = request.user.archive_tasks.all()
+    return render(request, "pinBoard/archive.html", {"archive_tasks": archived_tasks})
 
 
 def sensors(request):
@@ -161,6 +179,13 @@ def user_view(request, id):
             task_to_delete = Task.objects.get(id=id_task_to_delete)
             task_to_delete.delete()
 
+            return redirect('pinBoard:user_view', id=id)
+        if request.POST.get("done"):
+            task_id = request.POST.get("done")
+            task = Task.objects.get(id=task_id)
+            archive_task = ArchiweTasks.objects.create(content=task.content, user=request.user)
+            archive_task.save()
+            task.delete()
             return redirect('pinBoard:user_view', id=id)
 
 def user_add_task_self(request, id):
