@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm, MeetingForm
-from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note
+from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note, Meeting
 
 
 def home(request):
@@ -126,10 +126,8 @@ def user_view(request, id):
         user = User.objects.get(id=id)
         user_notes = list(user.notes.all().order_by("-id"))
         user_meetings = user.meetinges.all().order_by("date")
-        return render(request, "pinBoard/user_view.html", {"user": user,
-                                                             "user_meetings": user_meetings,
-                                                             "user_notes": user_notes,
-                                                             })
+        return render(request, "pinBoard/user_view.html", {"user": user, "user_meetings": user_meetings,
+                                                             "user_notes": user_notes})
     else:
 
         if request.POST.get("delete"):
@@ -186,11 +184,19 @@ def meeting_form(request, id):
         form = MeetingForm(request.POST)
         if form.is_valid():
             meeting = form.save(commit=False)
-            meeting.member = User.objects.get(id=id)
+            meeting.user = User.objects.get(id=id)
             meeting.save()
 
             return redirect("pinBoard:all_meetings", id=id)
 
 
-def all_meetings(request):
-    pass
+def all_meetings(request, id):
+    if request.method == "GET":
+        all_user_meetings = Meeting.objects.filter(user__id=id).order_by("date")
+        user = User.objects.get(id=id)
+
+        context = {
+            "all__user_meetings": all_user_meetings,
+            "user": user
+        }
+        return render(request, "pinBoard/all_meetings.html", context)

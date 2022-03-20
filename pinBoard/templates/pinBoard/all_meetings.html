@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%  block styles %}
+ {{ block.super }}
+    <link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}">
+
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+
+<section>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Data</th>
+      <th scope="col">Godzina</th>
+      <th scope="col">Gdzie</th>
+      <th scope="col">Nazwa</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  {% for meeting in all__user_meetings %}
+    <tr>
+      <th scope="row">{{ meeting.date }}</th>
+      <td>{{ meeting.hour }}</td>
+      <td>{{ meeting.location }}</td>
+      <td>{{ meeting.name }}</td>
+    </tr>
+
+  {% endfor %}
+
+  </tbody>
+
+</table>
+
+<a type="button" class="btn btn-success" href="{% url 'pinBoard:meeting_form' id=user.id %}">Dodaj</a>
+<a type="button" class="btn btn-primary" href="{% url 'pinBoard:user_view' id=user.id %}">Powrót</a>
+</section>
+
+{% endblock %}
