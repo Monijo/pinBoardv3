@@ -55,6 +55,7 @@ def family_list(request):
         return render(request, "pinBoard/family_list.html", {"families":families})
     else:
         family_id = request.POST.get("family_id")
+        return redirect(f"dashboard/{family_id}")
 
 def create_family(request):
     if request.method == "POST":
@@ -68,79 +69,77 @@ def create_family(request):
             family.save()
 
 
-            return redirect("pinBoard:dashboard")
+            return redirect("pinBoard:family_list")
 
     else:
         form = FamilyForm()
     return render(request, "pinBoard/createFamily.html", {"form": form})
 
 
-def dashboard(request):
+def dashboard(request, f_id):
     if request.method == "GET":
         sentences = Sentence.objects.all()
         random_sentence = random.choice(sentences)
-        families = request.user.families.all()
-        tasks_list = []
-        # for family in families:
-        #     for task in family.tasks.all():
-        #         tasks_list.append(task)
-        print("*"*40, tasks_list)
-        context = {'random_sentence': random_sentence}
+        family = Family.objects.get(id=f_id)
+        family_tasks = family.tasks
+        family_shop_list = family.shop_items
+
+        context = {'random_sentence': random_sentence, 'tasks': family_tasks, 'family': family, "shop_items": family_shop_list}
 
         return render(request, 'pinBoard/dashboard.html', context)
     else:
 
-        if request.POST.get("tasks_members"):
-            member_id = request.POST.get("tasks_members")
-            member = User.objects.get(id=member_id)
-            task_id = request.POST.get("tasks")
+        if request.POST.get("add_to_user"):
+            task_to_transfer = Task.objects.get(id=request.POST.get("add_to_user"))
+            task_to_transfer.user = request.user
+            task_to_transfer.save()
 
-            selected_task = Task.objects.get(id=task_id)
-            selected_task.member = member
-            selected_task.save()
 
-        id_task_to_delete = request.POST.get("delete")
-        if id_task_to_delete:
+        if request.POST.get("delete"):
+            id_task_to_delete = request.POST.get("delete")
             task_to_delete = Task.objects.get(id=id_task_to_delete)
             task_to_delete.delete()
 
-        return redirect("pinBoard:dashboard")
+        return redirect(f"/dashboard/{f_id}")
 
 
-def add_shop_item(request):
+def add_shop_item(request, f_id):
     if request.method == "POST":
         form = ShopItemForm(request.POST)
+        family = Family.objects.get(id=f_id)
 
         if form.is_valid():
             item = form.save(commit=False)
-            item.user = request.user
+            item.family = family
             item.save()
-            return redirect("pinBoard:dashboard")
+            return redirect(f"/dashboard/{f_id}")
 
     else:
         form = ShopItemForm()
+        family = Family.objects.get(id=f_id)
 
-    return render(request, "pinBoard/shop_list_form.html", {'form': form})
+    return render(request, "pinBoard/shop_list_form.html", {'form': form, 'family':family})
 
 
-def add_task(request):
+def add_task(request, f_id):
     if request.method == "POST":
         form = TaskForm(request.POST)
+        family = Family.objects.get(id=f_id)
 
         if form.is_valid():
             task = form.save(commit=False)
-            task.family = request.user
+            task.family = family
             task.save()
-            return redirect("pinBoard:dashboard")
+            return redirect(f"/dashboard/{f_id}")
 
     else:
         form = TaskForm()
+        family = Family.objects.get(id=f_id)
+    return render(request, "pinBoard/user_task_form.html", {'form': form, 'family': family})
 
-    return render(request, "pinBoard/user_task_form.html", {'form': form})
 
-
-def archive(request):
-    return HttpResponse("Działa!")
+def archive(request, id):
+    return render(request, "pinBoard/archive.html")
 
 
 def sensors(request):

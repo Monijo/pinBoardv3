@@ -22,7 +22,7 @@
     {% for note in all_notes %}
 
   <li  class="list-group-item list-group-item-success">{{ note.content }}
-    <form actopn="" method="POST">
+    <form action="" method="POST">
     {% csrf_token %}
     <input type="hidden" name="delete_note" value="{{ note.id }}">
     <input type="submit" class="btn btn-danger" value="x">

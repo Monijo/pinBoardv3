@@ -22,7 +22,7 @@
         <span>{{ family.name }}</span>
              <input name="family_id" class="form-check-input me-1" type="hidden" value="{{ family.id }}" >
 
-        <button style="margin-left: 40px" type="submit" class="btn btn-success" href="{% url 'pinBoard:dashboard' %}">Przejdź do tej rodziny</button>
+        <button style="margin-left: 40px" type="submit" class="btn btn-success" href="{% url 'pinBoard:dashboard' f_id=family.id %}">Przejdź do tej rodziny</button>
 </li>
         {% empty %}
         Nie należysz jescze do żadnej rodziny.

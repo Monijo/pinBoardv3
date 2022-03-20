@@ -13,11 +13,11 @@ urlpatterns = [
     path('families', views.family_list, name="family_list"),
     path('create_familie', views.create_family, name="create_family"),
 
-    path('users/', views.dashboard, name='dashboard'),
-    path('users/shop_list_form', views.add_shop_item, name='shop_list_form'),
-    path('users/task-form', views.add_task, name='task_form'),
-    path('users/archive', views.archive, name='archive'),
-    path('users/sensors', views.sensors, name='sensors'),
+    path('dashboard/<int:f_id>', views.dashboard, name='dashboard'),
+    path('dashboard/<int:f_id>/shop_list_form', views.add_shop_item, name='shop_list_form'),
+    path('dashboard/<int:f_id>/task-form', views.add_task, name='task_form'),
+
+    path('dashboard/sensors', views.sensors, name='sensors'),
 
     path('users/<int:id>', views.user_view, name='user_view'),
     path('users/<int:id>/task_form', views.user_add_task_self, name='user_add_task_self'),
@@ -25,5 +25,6 @@ urlpatterns = [
     path('users/<int:id>/all_notes', views.all_notes, name='all_notes'),
     path('users/<int:id>/meeting_form', views.meeting_form, name='meeting_form'),
     path('users/<int:id>/all_meetings', views.all_meetings, name='all_meetings'),
+    path('users/<int:id>/archive', views.archive, name='archive'),
 
 ]

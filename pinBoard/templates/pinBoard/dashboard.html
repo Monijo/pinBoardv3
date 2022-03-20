@@ -24,8 +24,9 @@
     <div class="container-fluid" style="margin: 8px">
 {#        <a type="button" class="btn btn-primary" href="{% url 'pinBoard:member_view' member_id=member.id %}">{{ member.name }}</a>#}
           <a type="button" class="btn btn-primary" href="{% url 'pinBoard:family_list' %}">Rodziny</a>
-          <button type="button" class="btn btn-primary">Archiwum</button>
+          <a  type="button" class="btn btn-primary" href="{% url 'pinBoard:archive' id=request.user.id %}">Archiwum</a>
           <button type="button" class="btn btn-primary">Sensors</button>
+          <a type="button" href="{% url 'pinBoard:user_view' id=request.user.id %}" class="btn btn-primary">Widok użytkownika</a>
 
 
 
@@ -47,31 +48,35 @@
      <table style="width:100%;table-layout:fixed;padding: 5px">
      <form action="" method="POST">
      {% csrf_token %}
-         {%  for task in tasks_list %}
+         {%  for task in tasks.all %}
     <tr>
 
-        <td style="width:65%; padding: 5px">
+        <td style="width:80%; padding: 5px">
             <input name="tasks" class="form-check-input me-1" type="hidden" value="{{ task.id }}" aria-label="...">
             {{ task.content }}</td>
+
         <td>
+            </form>
 
-            <select id="tasks_members" name="tasks_members">
-
-{% for member in list_members %}
-   <option value="{{member.id}}">
-     {{ member.name }}
-   </option>
-    </select>
-
-{% endfor %}
-
-
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name= "delete" value="{{ task.id }}">
+                <input class="btn btn-danger" type="submit" value="x">
+            </form>
         </td>
-        <td><input class="btn btn-success" type="submit" value="+"></td>
+
+        <td>    <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="add_to_user" value="{{ task.id }}">
+                <input class="btn btn-success" type="submit" value="+">
+            </form>
+        </td>
     </tr>
              </form>
          {% endfor %}
 </table>
+
+ <a type="button" class="btn btn-success" href="{% url 'pinBoard:task_form' f_id=family.id %}">Dodaj zadanie</a>
 
 </div>
      </div>
@@ -102,11 +107,20 @@
     Lista zakupów:
   </div>
   <ul class="list-group list-group-flush">
-      {% for item in items_to_buy %}
-    <li class="list-group-item">{{ item.name }}, Ilość: {{ item.quantity }}</li>
+      {% for item in shop_items.all %}
+    <li class="list-group-item">{{ item.name }}, Ilość: {{ item.quantity }}
+
+
+    </li>
+{#              <form action="" method="POST">#}
+{#    {% csrf_token %}#}
+{#    <input type="hidden" name="delete_note" value="{{ item.id }}">#}
+{#    <input type="submit" class="btn btn-danger" value="x">#}
+{##}
+{#    </form>#}
         {% endfor %}
 
-  <a type="button" class="btn btn-success" href="{% url 'pinBoard:shop_list_form' %}">Dodaj element do listy zakupów</a>
+  <a type="button" class="btn btn-success" href="{% url 'pinBoard:shop_list_form' f_id=family.id %}">Dodaj element do listy zakupów</a>
   </ul>
 </div>
 

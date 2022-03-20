@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%  block styles %}
+ {{ block.super }}
+    <link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}">
+
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+
+<section>
+
+Archiwlane taski
+
+
+<a type="button" class="btn btn-primary" href="{% url 'pinBoard:user_view' id=user.id %}">Powrót</a>
+</section>
+
+{% endblock %}

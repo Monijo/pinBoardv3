@@ -14,7 +14,7 @@
     {{ form | crispy }}
 
     <button type="submit" class="btn btn-success">Zapisz</button>
-    <a type="button" class="btn btn-primary" href="{% url 'pinBoard:dashboard' %}">Powrót</a>
+    <a type="button" class="btn btn-primary" href="{% url 'pinBoard:dashboard' f_id=family.id %}">Powrót</a>
 
     </form>
 
