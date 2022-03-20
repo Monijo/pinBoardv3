@@ -87,3 +87,8 @@ class Meeting(models.Model):
     def __str__(self):
         return self.name
 
+
+class ArchiweTasks(models.Model):
+    content = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="archive_tasks")
+
