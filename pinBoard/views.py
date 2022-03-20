@@ -6,7 +6,7 @@ from django.forms import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm
+from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm
 from pinBoard.models import Sentence, Task, ShopItem, User, Family
 
 
@@ -142,8 +142,19 @@ def user_view(request, id):
 
 
 
-def note_form(request):
-    pass
+def note_form(request, id):
+    if request.method == "GET":
+        form = NoteForm()
+        return render(request, "pinBoard/note_form.html", {"form": form})
+
+    else:
+        form = NoteForm(request.POST)
+
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.user = User.objects.get(id=id)
+            note.save()
+            return redirect("pinBoard:user_view", id=id)
 
 
 def all_notes(request):
