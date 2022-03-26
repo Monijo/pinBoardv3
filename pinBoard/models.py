@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -32,10 +34,10 @@ class FamilyUser(models.Model):
 
 
 class Invitation(models.Model):
-    number = models.UUIDField()
+    number = models.UUIDField(default=uuid.uuid4)
     family = models.ForeignKey(Family, on_delete=models.CASCADE, related_name="invitations")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_invitations")
-    target_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, related_name="target_user_invitations", verbose_name="Imie osoby którą chcesz zaprosić")
+    target_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name="target_user_invitations", verbose_name="Imie osoby którą chcesz zaprosić")
     email = models.EmailField(blank=True)
     expired = models.BooleanField()
     created_date = models.DateTimeField(auto_now_add=True)

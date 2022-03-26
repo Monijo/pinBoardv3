@@ -2,6 +2,7 @@ import crispy_forms.bootstrap
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
 from django.forms import TextInput, NumberInput, PasswordInput, Textarea, DateTimeInput, TimeInput
 
 from pinBoard.models import ShopItem, Task, Note, Meeting, Family, Invitation
@@ -113,9 +114,19 @@ class InvitationForm(forms.ModelForm):
         model = Invitation
         fields = ("target_user", "email", "family")
 
-        widgets = {
-            "target_user": TextInput(attrs={'placeholder': "Podaj nazwę osoby którą chcesz zaprosić"}),
-            'email': TextInput(attrs={'placeholder': "Adres e-mail osoby którą chcesz zaprosić"}),
-            "family": TextInput(attrs={'placeholder': 'nazwa rodziny'})
-        }
+    def clean(self):
+        super().clean()
+        target_user = self.cleaned_data.get("target_user")
+        email = self.cleaned_data.get("email")
+
+        if target_user and email:
+            msg = "Complete one field Name or email"
+            self.add_error('target_user', msg)
+            self.add_error('email', msg)
+
+        if not target_user and not email:
+            raise ValidationError(
+                "Fill the email or name field to continue"
+            )
+
 

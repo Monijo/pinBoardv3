@@ -5,10 +5,11 @@ from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
+from django.urls import reverse
 
 from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm, MeetingForm, FamilyForm, \
     InvitationForm
-from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note, Meeting, ArchiweTasks
+from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note, Meeting, ArchiweTasks, Invitation
 
 
 def home(request):
@@ -148,29 +149,37 @@ def send_mail_view(request, f_id):
             invitation.expired = False
             invitation.save()
 
-            invitation_link = f"/dashboard/invitation/{invitation.number}"
-
-            if invitation.target_user:
-                try:
+            invitation_link = reverse("pinBoard:invitation_link", kwargs={"f_id": invitation.family.pk, "uuid": invitation.number})
+            if invitation.target_user or invitation.email:
+                    email = invitation.email or invitation.target_user.email
                     result = send_mail(
                         "Hello",
-                        f'''Do you want to join our family? {invitation.family.name}
-                             Click link: {invitation_link}
+                        f'''
+                            Do you want to join our family {invitation.family.name}?
+                            Click link: {invitation_link}
 
                              ''',
                         'another@example.com',
-                        [invitation.email],
+                        [email],
                         fail_silently=False,
 
                     )
-                except BadHeaderError:
-                    return HttpResponse('Invalid header found.')
+                    if result == 0:
+                        invitation.delete()
+                        return HttpResponse("Nie udało się wysłać maila! Spróbuj ponownie!")
 
             return redirect("pinBoard:family_list")
 
     else:
         form = InvitationForm()
     return render(request, "pinBoard/invitation_form.html", {"form": form})
+
+
+def confirm_invitation(request, f_id, uuid):
+    invitations = Invitation.objects.all()
+    if uuid in invitations:
+        return HttpResponse("Tu bedzie obsluga")
+    return HttpResponse("Cos poszło nie tak!")
 
 def archive(request, id):
     archived_tasks = request.user.archive_tasks.all()

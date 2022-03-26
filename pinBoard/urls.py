@@ -14,7 +14,8 @@ urlpatterns = [
     path('create_familie', views.create_family, name="create_family"),
 
     path('dashboard/<int:f_id>', views.dashboard, name='dashboard'),
-    path('dashboard/<int:f_id>/send_mail_view', views.send_mail_view, name='send_mail_view'),
+    path('dashboard/<int:f_id>/send_mail_view/', views.send_mail_view, name='send_mail_view'),
+    path('dashboard/<int:f_id>/send_mail_view/<uuid>', views.confirm_invitation, name='invitation_link'),
     path('dashboard/<int:f_id>/shop_list_form', views.add_shop_item, name='shop_list_form'),
     path('dashboard/<int:f_id>/task-form', views.add_task, name='task_form'),
 
