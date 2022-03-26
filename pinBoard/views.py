@@ -2,9 +2,9 @@ import random
 
 from django.contrib.auth import login, authenticate, logout
 from django.forms import inlineformset_factory
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 
 from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm, MeetingForm, FamilyForm, \
     InvitationForm
@@ -138,27 +138,33 @@ def add_task(request, f_id):
         family = Family.objects.get(id=f_id)
     return render(request, "pinBoard/user_task_form.html", {'form': form, 'family': family})
 
-def invitation_form(request, f_id):
+def send_mail_view(request, f_id):
     if request.method == "POST":
         form = InvitationForm(request.POST)
 
         if form.is_valid():
             invitation = form.save(commit=False)
-            invitation.user=request.user
-            invitation.expired=False
+            invitation.user = request.user
+            invitation.expired = False
             invitation.save()
 
             invitation_link = f"/dashboard/invitation/{invitation.number}"
-            send_mail(
-                {invitation.target_user},
-                f'''Do you want to join our family? {invitation.family.name}
-                Click link: {invitation_link}
-                
-                ''',
-                {request.user.first_name},
-                [{invitation.email}],
-                fail_silently=False,
-            )
+
+            if invitation.target_user:
+                try:
+                    result = send_mail(
+                        "Hello",
+                        f'''Do you want to join our family? {invitation.family.name}
+                             Click link: {invitation_link}
+
+                             ''',
+                        'another@example.com',
+                        [invitation.email],
+                        fail_silently=False,
+
+                    )
+                except BadHeaderError:
+                    return HttpResponse('Invalid header found.')
 
             return redirect("pinBoard:family_list")
 

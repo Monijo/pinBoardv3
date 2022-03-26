@@ -2,7 +2,11 @@
 {% load static %}
 
 
+{% block scripts %}
+    {{ block.super }}
+    <script src="{% static 'scripts/app.js' %}" async defer></script>
 
+{% endblock %}
 
 {% block content %}
 
@@ -25,7 +29,7 @@
 
           <a type="button" class="btn btn-primary" href="{% url 'pinBoard:family_list' %}">Rodziny</a>
          <a type="button" href="{% url 'pinBoard:user_view' id=request.user.id %}" class="btn btn-primary">Widok użytkownika</a>
-         <a type="button" href="{% url 'pinBoard:invitation_form' f_id=family.id%}" class="btn btn-primary">Zaproś członka rodziny</a>
+         <a type="button" href="{% url 'pinBoard:send_mail_view' f_id=family.id%}" class="btn btn-primary">Zaproś członka rodziny</a>
           <a  type="button" class="btn btn-primary" href="{% url 'pinBoard:archive' id=request.user.id %}">Archiwum</a>
 
 
@@ -52,7 +56,7 @@
      <form action="" method="POST">
      {% csrf_token %}
          {%  for task in tasks.all %}
-    <tr>
+    <tr id="taskRow">
 
         <td style="width:80%; padding: 5px">
             <input name="tasks" class="form-check-input me-1" type="hidden" value="{{ task.id }}" aria-label="...">
@@ -70,8 +74,8 @@
 
         <td>    <form action="" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="add_to_user" value="{{ task.id }}">
-                <input class="btn btn-success" type="submit" value="+">
+                <input type="hidden" id="taskId" name="add_to_user" value="{{ task.id }}">
+                <input class="btn btn-success" id="transferTask" type="submit" value="+">
             </form>
         </td>
     </tr>
