@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block styles %}
+    {{ block.super }}
+ <link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+   <h1>Potwierdż chęć należenia do tej rodziny</h1>
+    <button  type="submit" class="btn btn-success">Potwierdzam</button>
+
+
+
+{% endblock %}

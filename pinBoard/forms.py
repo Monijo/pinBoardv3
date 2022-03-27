@@ -110,9 +110,18 @@ class FamilyForm(forms.ModelForm):
 
 
 class InvitationForm(forms.ModelForm):
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+        qs = user.families.all()
+        self.fields['family'].queryset = qs
+
     class Meta:
         model = Invitation
         fields = ("target_user", "email", "family")
+
+
 
     def clean(self):
         super().clean()

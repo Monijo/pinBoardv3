@@ -139,9 +139,12 @@ def add_task(request, f_id):
         family = Family.objects.get(id=f_id)
     return render(request, "pinBoard/user_task_form.html", {'form': form, 'family': family})
 
+
+
+
 def send_mail_view(request, f_id):
     if request.method == "POST":
-        form = InvitationForm(request.POST)
+        form = InvitationForm(request.user, request.POST)
 
         if form.is_valid():
             invitation = form.save(commit=False)
@@ -168,18 +171,25 @@ def send_mail_view(request, f_id):
                         invitation.delete()
                         return HttpResponse("Nie udało się wysłać maila! Spróbuj ponownie!")
 
+
             return redirect("pinBoard:family_list")
 
     else:
-        form = InvitationForm()
+        form = InvitationForm(request.user)
     return render(request, "pinBoard/invitation_form.html", {"form": form})
 
 
 def confirm_invitation(request, f_id, uuid):
-    invitations = Invitation.objects.all()
-    if uuid in invitations:
-        return HttpResponse("Tu bedzie obsluga")
+    invitation = Invitation.objects.get(number=uuid)
+    if invitation:
+
+        return render(request, "pinBoard/confirm_invitation.html")
     return HttpResponse("Cos poszło nie tak!")
+
+
+
+
+
 
 def archive(request, id):
     archived_tasks = request.user.archive_tasks.all()

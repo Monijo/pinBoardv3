@@ -18,7 +18,7 @@ class User(AbstractUser):
     families = models.ManyToManyField(Family, through="FamilyUser")
 
     def __str__(self):
-        return self.first_name
+        return self.username
 
 
 class FamilyUser(models.Model):
