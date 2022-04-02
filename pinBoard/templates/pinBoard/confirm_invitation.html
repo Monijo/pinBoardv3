@@ -8,8 +8,16 @@
 
 {% block content %}
 
-   <h1>Potwierdż chęć należenia do tej rodziny</h1>
+
+
+    <form action="" method="Post">
+    {%  csrf_token %}
+    <h1>Potwierdż chęć należenia do tej rodziny</h1>
     <button  type="submit" class="btn btn-success">Potwierdzam</button>
+
+    </form>
+
+    <a  type="submit" class="btn btn-secondary" href="{% url 'pinBoard:home' %}">Nie potwierdzam</a>
 
 
 

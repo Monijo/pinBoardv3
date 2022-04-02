@@ -9,7 +9,7 @@ from django.urls import reverse
 
 from pinBoard.forms import UserForm, UserLogInForm, ShopItemForm, TaskForm, NoteForm, MeetingForm, FamilyForm, \
     InvitationForm
-from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note, Meeting, ArchiweTasks, Invitation
+from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note, Meeting, ArchiweTasks, Invitation, FamilyUser
 
 
 def home(request):
@@ -180,10 +180,24 @@ def send_mail_view(request, f_id):
 
 
 def confirm_invitation(request, f_id, uuid):
-    invitation = Invitation.objects.get(number=uuid)
-    if invitation:
 
-        return render(request, "pinBoard/confirm_invitation.html")
+    invitation = Invitation.objects.get(number=uuid)
+
+    if invitation:
+        if request.method == "GET":
+            return render(request, "pinBoard/confirm_invitation.html")
+        else:
+            # if invitation.target_user:
+            #     print("*"*40)
+            #     family = FamilyUser.objects.get(id=invitation.family.id)
+            #     family.user_set.add(invitation.target_user)
+            #
+            #     return redirect("pinBoard:user_view", id=invitation.target_user_id)
+            if invitation.email:
+                family = FamilyUser.objects.filter(family__name=invitation.family)[0]
+                family.user = invitation.target_user
+
+                return HttpResponse("Zostałeś dołączony! Zaloguj się lub załuż konto żeby wyświetlić zawartośc strony")
     return HttpResponse("Cos poszło nie tak!")
 
 

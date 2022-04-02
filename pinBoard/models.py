@@ -29,8 +29,7 @@ class FamilyUser(models.Model):
     class Meta:
         unique_together = [['user', 'family']]
 
-    def __str__(self):
-        return self.user
+
 
 
 class Invitation(models.Model):
