@@ -1,6 +1,7 @@
 import random
 
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -50,7 +51,7 @@ def log_out(request):
     logout(request)
     return redirect("pinBoard:home")
 
-
+@login_required
 def family_list(request):
     if request.method =="GET":
         families = request.user.families.all()
@@ -59,6 +60,8 @@ def family_list(request):
         family_id = request.POST.get("family_id")
         return redirect(f"dashboard/{family_id}")
 
+
+@login_required
 def create_family(request):
     if request.method == "POST":
         form = FamilyForm(request.POST)
@@ -77,7 +80,7 @@ def create_family(request):
         form = FamilyForm()
     return render(request, "pinBoard/createFamily.html", {"form": form})
 
-
+@login_required
 def dashboard(request, f_id):
     if request.method == "GET":
         sentences = Sentence.objects.all()
@@ -104,7 +107,7 @@ def dashboard(request, f_id):
 
         return redirect(f"/dashboard/{f_id}")
 
-
+@login_required
 def add_shop_item(request, f_id):
     if request.method == "POST":
         form = ShopItemForm(request.POST)
@@ -122,7 +125,7 @@ def add_shop_item(request, f_id):
 
     return render(request, "pinBoard/shop_list_form.html", {'form': form, 'family':family})
 
-
+@login_required
 def add_task(request, f_id):
     if request.method == "POST":
         form = TaskForm(request.POST)
@@ -141,7 +144,7 @@ def add_task(request, f_id):
 
 
 
-
+@login_required
 def send_mail_view(request, f_id):
     if request.method == "POST":
         form = InvitationForm(request.user, request.POST)
@@ -204,16 +207,17 @@ def confirm_invitation(request, f_id, uuid):
 
 
 
-
+@login_required
 def archive(request, id):
     archived_tasks = request.user.archive_tasks.all()
     return render(request, "pinBoard/archive.html", {"archive_tasks": archived_tasks})
 
-
+@login_required
 def sensors(request):
     pass
 
 #user
+@login_required
 def user_view(request, id):
     if request.method == "GET":
         user = User.objects.get(id=id)
@@ -238,6 +242,8 @@ def user_view(request, id):
             task.delete()
             return redirect('pinBoard:user_view', id=id)
 
+
+@login_required
 def user_add_task_self(request, id):
     if request.method == "POST":
         form = TaskForm(request.POST)
@@ -253,6 +259,8 @@ def user_add_task_self(request, id):
 
     return render(request, "pinBoard/user_self_task_form.html", {'form': form})
 
+
+@login_required
 def note_form(request, id):
     if request.method == "GET":
         form = NoteForm()
@@ -267,7 +275,7 @@ def note_form(request, id):
             note.save()
             return redirect("pinBoard:user_view", id=id)
 
-
+@login_required
 def all_notes(request, id):
     if request.method == "GET":
         user = User.objects.get(id=id)
@@ -287,7 +295,7 @@ def all_notes(request, id):
 
         return redirect("pinBoard:all_notes", id=id)
 
-
+@login_required
 def meeting_form(request, id):
     if request.method == "GET":
         form = MeetingForm()
@@ -302,7 +310,7 @@ def meeting_form(request, id):
 
             return redirect("pinBoard:all_meetings", id=id)
 
-
+@login_required
 def all_meetings(request, id):
     if request.method == "GET":
         all_user_meetings = Meeting.objects.filter(user__id=id).order_by("date")

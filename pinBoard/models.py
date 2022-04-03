@@ -30,8 +30,6 @@ class FamilyUser(models.Model):
         unique_together = [['user', 'family']]
 
 
-
-
 class Invitation(models.Model):
     number = models.UUIDField(default=uuid.uuid4)
     family = models.ForeignKey(Family, on_delete=models.CASCADE, related_name="invitations")
