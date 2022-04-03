@@ -12,6 +12,11 @@ def test_sign_up(client, user):
     assert response_get.status_code == 200
     assert response_post.status_code == 200
 
+    # url = reverse('homepage-url')
+   # response = client.get(url)
+   # assert response.status_code == 200
+
+
 
 def test_log(client):
     response = client.get('/log')
