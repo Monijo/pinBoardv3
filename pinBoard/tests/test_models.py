@@ -1,6 +1,8 @@
 import pytest
 from django.contrib.auth import get_user_model
 
+from pinBoard.models import Note
+
 
 def test_create_user(django_user_model, user):
     users = django_user_model.objects.all()
