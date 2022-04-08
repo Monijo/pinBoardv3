@@ -190,15 +190,14 @@ def confirm_invitation(request, f_id, uuid):
         else:
             if invitation.target_user:
 
-                family = FamilyUser.objects.get(id=invitation.family.id)
-                print("*"*20)
-                # family.user_set.add(invitation.target_user)
+                family = FamilyUser.objects.filter(family__name=invitation.family)[0]
+                family.user.name = invitation.target_user
 
                 return redirect("pinBoard:user_view", id=invitation.target_user_id)
             if invitation.email:
                 if request.user:
                     family = FamilyUser.objects.filter(family__name=invitation.family)[0]
-                    family.user = request.user
+                    family.user.add(request.user)
                 else:
                     return HttpResponse("Zaloguj się lub załuż konto żeby wyświetlić zawartośc strony")
     return HttpResponse("Cos poszło nie tak!")
