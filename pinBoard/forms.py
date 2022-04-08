@@ -56,7 +56,7 @@ class UserForm(forms.ModelForm):
         user = super().save(commit=False)
         user.password = make_password(self.cleaned_data.get('password'))
         user.username = self.cleaned_data.get('username')
-        user.families = self.cleaned_data.get('families_set')
+        # user.families = self.cleaned_data.get('families_set')
 
         if commit:
             user.save()

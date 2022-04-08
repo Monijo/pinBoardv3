@@ -23,8 +23,6 @@ def sign_up(request):
 
         if form.is_valid():
             user_log = form.save(commit=False)
-
-            user_log.families.add(request.families)
             user_log.save()
             login(request, user_log)
             return redirect('pinBoard:sign_in')
@@ -86,7 +84,7 @@ def dashboard(request, f_id):
         sentences = Sentence.objects.all()
         random_sentence = random.choice(sentences)
         family = Family.objects.get(id=f_id)
-        family_tasks = family.tasks
+        family_tasks = family.tasks.filter(user__isnull=True)
         family_shop_list = family.shop_items
 
         context = {'random_sentence': random_sentence, 'tasks': family_tasks, 'family': family,
@@ -190,17 +188,19 @@ def confirm_invitation(request, f_id, uuid):
         if request.method == "GET":
             return render(request, "pinBoard/confirm_invitation.html")
         else:
-            # if invitation.target_user:
-            #     print("*"*40)
-            #     family = FamilyUser.objects.get(id=invitation.family.id)
-            #     family.user_set.add(invitation.target_user)
-            #
-            #     return redirect("pinBoard:user_view", id=invitation.target_user_id)
-            if invitation.email:
-                family = FamilyUser.objects.filter(family__name=invitation.family)[0]
-                family.user = invitation.target_user
+            if invitation.target_user:
 
-                return HttpResponse("Zostałeś dołączony! Zaloguj się lub załuż konto żeby wyświetlić zawartośc strony")
+                family = FamilyUser.objects.get(id=invitation.family.id)
+                print("*"*20)
+                # family.user_set.add(invitation.target_user)
+
+                return redirect("pinBoard:user_view", id=invitation.target_user_id)
+            if invitation.email:
+                if request.user:
+                    family = FamilyUser.objects.filter(family__name=invitation.family)[0]
+                    family.user = request.user
+                else:
+                    return HttpResponse("Zaloguj się lub załuż konto żeby wyświetlić zawartośc strony")
     return HttpResponse("Cos poszło nie tak!")
 
 
@@ -212,7 +212,8 @@ def archive(request, id):
 
 @login_required
 def sensors(request):
-    pass
+
+    return render(request, "pinBoard/sensors.html")
 
 
 # user
