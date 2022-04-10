@@ -14,10 +14,20 @@ from pinBoard.models import Sentence, Task, ShopItem, User, Family, Note, Meetin
 
 
 def home(request):
+
+    """
+    Function rendering landing page view of the application
+    """
+
     return render(request, 'pinBoard/landing_page.html')
 
 
 def sign_up(request):
+
+    """
+    The function rendering the registration view to the application.
+    """
+
     if request.method == "POST":
         form = UserForm(request.POST)
 
@@ -33,6 +43,11 @@ def sign_up(request):
 
 
 def sign_in(request):
+
+    """
+    A function that renders the application login view.
+    """
+
     if request.method == "POST":
         user_log = authenticate(username=request.POST.get("username"), password=request.POST.get("password"))
         if user_log is not None:
@@ -45,12 +60,22 @@ def sign_in(request):
 
 
 def log_out(request):
+
+    """
+    Function that logs out of the application.
+    """
+
     logout(request)
     return redirect("pinBoard:home")
 
 
 @login_required
 def family_list(request):
+
+    """
+    Function displaying the list of families the user belongs to.
+    """
+
     if request.method == "GET":
         families = request.user.families.all()
         return render(request, "pinBoard/family_list.html", {"families": families})
@@ -61,6 +86,11 @@ def family_list(request):
 
 @login_required
 def create_family(request):
+
+    """
+    Function that displays the form for adding a family to the user.
+    """
+
     if request.method == "POST":
         form = FamilyForm(request.POST)
 
@@ -80,6 +110,11 @@ def create_family(request):
 
 @login_required
 def dashboard(request, f_id):
+
+    """
+    Function that displays a view belonging to a family with a specific f_id.
+    """
+
     if request.method == "GET":
         sentences = Sentence.objects.all()
         random_sentence = random.choice(sentences)
@@ -108,6 +143,11 @@ def dashboard(request, f_id):
 
 @login_required
 def add_shop_item(request, f_id):
+
+    """
+    Function rendering form - add item to shopping list.
+    """
+
     if request.method == "POST":
         form = ShopItemForm(request.POST)
         family = Family.objects.get(id=f_id)
@@ -127,6 +167,11 @@ def add_shop_item(request, f_id):
 
 @login_required
 def add_task(request, f_id):
+
+    """
+    A function that renders a form for adding a task to a family.
+    """
+
     if request.method == "POST":
         form = TaskForm(request.POST)
         family = Family.objects.get(id=f_id)
@@ -145,6 +190,11 @@ def add_task(request, f_id):
 
 @login_required
 def send_mail_view(request, f_id):
+
+    """
+    A function that renders a form for inviting a new family member.
+    """
+
     if request.method == "POST":
         form = InvitationForm(request.user, request.POST)
 
@@ -182,6 +232,12 @@ def send_mail_view(request, f_id):
 
 
 def confirm_invitation(request, f_id, uuid):
+
+    """
+    A function that renders a confirmation page for wanting to belong to family.
+    """
+
+
     invitation = Invitation.objects.get(number=uuid)
 
     if invitation:
@@ -205,6 +261,11 @@ def confirm_invitation(request, f_id, uuid):
 
 @login_required
 def archive(request, id):
+
+    """
+    A function that renders a list of completed tasks by the user.
+    """
+
     archived_tasks = request.user.archive_tasks.all()
     return render(request, "pinBoard/archive.html", {"archive_tasks": archived_tasks})
 
@@ -212,12 +273,21 @@ def archive(request, id):
 @login_required
 def sensors(request):
 
+    """
+    Function rendering the result of the reading from temperature, humidity and air pollution sensors.
+    """
+
     return render(request, "pinBoard/sensors.html")
 
 
 # user
 @login_required
 def user_view(request, id):
+
+    """
+    A function that renders a user view.
+    """
+
     if request.method == "GET":
         user = User.objects.get(id=id)
         user_notes = list(user.notes.all().order_by("-id"))
@@ -244,6 +314,11 @@ def user_view(request, id):
 
 @login_required
 def user_add_task_self(request, id):
+
+    """
+    A function that renders a form for adding a task to the user's task list.
+    """
+
     if request.method == "POST":
         form = TaskForm(request.POST)
 
@@ -261,6 +336,11 @@ def user_add_task_self(request, id):
 
 @login_required
 def note_form(request, id):
+
+    """
+    A function that renders a form for adding a note to the user's notes list.
+    """
+
     if request.method == "GET":
         form = NoteForm()
         return render(request, "pinBoard/note_form.html", {"form": form})
@@ -277,6 +357,11 @@ def note_form(request, id):
 
 @login_required
 def all_notes(request, id):
+
+    """
+    A function that renders a list of all user notes.
+    """
+
     if request.method == "GET":
         user = User.objects.get(id=id)
         all_notes_of_member = user.notes.all()
@@ -298,6 +383,11 @@ def all_notes(request, id):
 
 @login_required
 def meeting_form(request, id):
+
+    """
+    A function that renders the appointment creation form.
+    """
+
     if request.method == "GET":
         form = MeetingForm()
         return render(request, "pinBoard/meetings_form.html", {"form": form})
@@ -314,6 +404,11 @@ def meeting_form(request, id):
 
 @login_required
 def all_meetings(request, id):
+
+    """
+    A function that renders a list of all of the user's appointments.
+    """
+
     if request.method == "GET":
         all_user_meetings = Meeting.objects.filter(user__id=id).order_by("date")
         user = User.objects.get(id=id)

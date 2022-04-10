@@ -4,12 +4,22 @@
 {% block styles %}
     {{ block.super }}
  <link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}">
-{% endblock %}
 
+{% endblock %}
+{% block scripts %}
+    {{ block.super }}
+<script src="{% static 'scripts/sensors.js' %}"></script>
+{% endblock %}
 {% block content %}
 
 <div type="container">
+<div id="container" type="container">
+    <ul id="lista">
 
+    </ul>
+
+
+</div>
 
 </div>
 
